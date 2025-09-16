@@ -1,0 +1,26 @@
+<section class="hero">
+  <h1>Bienvenue sur <span class="brand">AREA</span></h1>
+  <p>Construis tes automatisations en quelques clics.</p>
+  <button (click)="goToWorkflows()">Commencer</button>
+</section>
+
+<section class="features">
+  <div role="button" tabindex="0" class="card"
+       (click)="goToWorkflows()"
+       (keydown.enter)="goToWorkflows()">
+    <h2>Automatise tes tâches</h2>
+    <p>Crée des workflows comme Zapier/IFTTT.</p>
+  </div>
+  <div role="button" tabindex="0" class="card"
+       (click)="goToWorkflows()"
+       (keydown.enter)="goToWorkflows()">
+    <h2>Connecte tes apps</h2>
+    <p>Slack, Discord, Gmail et plus encore.</p>
+  </div>
+  <div role="button" tabindex="0" class="card"
+       (click)="goToWorkflows()"
+       (keydown.enter)="goToWorkflows()">
+    <h2>Interface intuitive</h2>
+    <p>Glisser-déposer pour construire ton scénario.</p>
+  </div>
+</section>
