@@ -1,3 +1,5 @@
+<img src="md/assets/login.jpg" width=300 align="right" alt="Screenshot of the app's login page."/>
+
 # Flutter
 
 ## Pros
