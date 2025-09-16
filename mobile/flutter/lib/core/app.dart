@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:test_flutter/navigation/home_page.dart';
+import 'package:flutter/material.dart' hide Router;
+import 'package:test_flutter/core/router/router.dart';
 
 class App extends StatelessWidget {
 
-  const App({ super.key });
+  App({ super.key });
+
+  final Router _appRouter = Router();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'AREA - Flutter demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const HomePage(),
+    return MaterialApp.router(
+      routerConfig: _appRouter.router,
+      title: 'AREA - Flutter Demo',
+      debugShowCheckedModeBanner: true,
     );
   }
 
