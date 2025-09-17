@@ -9,7 +9,7 @@
 
 1. no ORM -> forced to use sqlalchemy
 2. young project
-3. Scalabilité
+3. scalabilitiy
 
 # Conclusion
 
