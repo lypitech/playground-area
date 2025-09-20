@@ -1,3 +1,16 @@
+# Angular
+
+## Pros
+
+- Framework complet et mature avec beaucoup de documentations
+- Structure cohérente pour les grands projets et grandes équipes
+- Support officiel de Google
+
+## Cons
+
+- Courbe d'apprentissage plus raide que certains autres frameworks
+- Structure stricte non nécessaire pour les plus petits projets et projets seul sur le front
+
 # MyApp
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.1.
