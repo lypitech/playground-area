@@ -1,4 +1,3 @@
-# app/main.py
 from fastapi import FastAPI, Request, HTTPException, Header
 from pydantic import BaseModel, Field
 from typing import Any, Dict, Optional, List
@@ -18,7 +17,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.exc import IntegrityError
 
 # -------------------- App & config --------------------
-load_dotenv()
+load_dotenv()  # charge les variables d'environnement depuis .env
 app = FastAPI(title="FastAPI + PostgreSQL POC")
 
 POSTGRES_URI = os.getenv(
@@ -31,6 +30,7 @@ WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "devsecret")
 class Base(DeclarativeBase):
     pass
 
+# Table workflows
 class Workflow(Base):
     __tablename__ = "workflows"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
@@ -43,6 +43,7 @@ class Workflow(Base):
 
     runs: Mapped[List["Run"]] = relationship(back_populates="workflow", lazy="raise")
 
+# Table runs (exécutions des workflows)
 class Run(Base):
     __tablename__ = "runs"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
@@ -55,6 +56,7 @@ class Run(Base):
 
     workflow: Mapped[Optional[Workflow]] = relationship(back_populates="runs", lazy="raise")
 
+# Table webhook_events
 class WebhookEvent(Base):
     __tablename__ = "webhook_events"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
@@ -65,10 +67,12 @@ class WebhookEvent(Base):
 
     __table_args__ = (UniqueConstraint("event_id", name="uq_webhook_event_event_id"),)
 
+# Création du moteur async SQLAlchemy
 engine = create_async_engine(POSTGRES_URI, echo=False, pool_pre_ping=True)
 SessionLocal = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
 # -------------------- Schemas --------------------
+# Schémas Pydantic pour validation des entrées/sorties API
 class WorkflowIn(BaseModel):
     name: str
     definition: Dict[str, Any] = Field(default_factory=dict)
@@ -84,8 +88,8 @@ class WorkflowCreated(BaseModel):
     name: str
 
 class RunRequest(BaseModel):
-    workflow_id: Optional[str] = None           # UUID string
-    workflow_name: Optional[str] = None         # alternative au UUID
+    workflow_id: Optional[str] = None
+    workflow_name: Optional[str] = None
     input: Dict[str, Any] = Field(default_factory=dict)
 
 class RunOut(BaseModel):
@@ -96,6 +100,7 @@ class RunOut(BaseModel):
     created_at: datetime
 
 # -------------------- Utils --------------------
+# Vérifie la signature HMAC d’un webhook
 def verify_hmac(secret: str, body: bytes, ts: str, signature: str) -> bool:
     base = f"t={ts}.{body.decode()}".encode()
     mac = hmac.new(secret.encode(), base, hashlib.sha256).hexdigest()
@@ -104,7 +109,7 @@ def verify_hmac(secret: str, body: bytes, ts: str, signature: str) -> bool:
 # -------------------- Startup --------------------
 @app.on_event("startup")
 async def on_startup():
-    # attend Postgres si besoin puis crée les tables
+    # Essaye de créer les tables jusqu'à 30 fois
     for attempt in range(30):
         try:
             async with engine.begin() as conn:
@@ -118,6 +123,7 @@ async def on_startup():
 # -------------------- Health --------------------
 @app.get("/ready")
 async def ready():
+    # Vérifie que la connexion DB marche
     async with engine.connect() as conn:
         await conn.execute(text("SELECT 1"))
     return {"ok": True}
@@ -125,6 +131,7 @@ async def ready():
 # -------------------- Workflows --------------------
 @app.post("/workflows", response_model=WorkflowCreated, status_code=201)
 async def create_workflow(wf: WorkflowIn):
+    # Crée un nouveau workflow
     async with SessionLocal() as session:
         obj = Workflow(name=wf.name, definition=wf.definition)
         session.add(obj)
@@ -138,6 +145,7 @@ async def create_workflow(wf: WorkflowIn):
 
 @app.get("/workflows", response_model=List[WorkflowOut])
 async def list_workflows():
+    # Liste tous les workflows
     async with SessionLocal() as session:
         res = await session.execute(select(Workflow).order_by(Workflow.created_at.desc()))
         items = res.scalars().all()
@@ -146,7 +154,7 @@ async def list_workflows():
 # -------------------- Runs --------------------
 @app.post("/runs/manual", response_model=Dict[str, Any])
 async def run_manual(body: RunRequest):
-    # Résoudre le workflow UUID depuis workflow_id ou workflow_name
+    # Lance manuellement un workflow
     workflow_uuid: Optional[uuid.UUID] = None
     if body.workflow_id:
         try:
@@ -177,6 +185,7 @@ async def run_manual(body: RunRequest):
 
 @app.get("/runs", response_model=List[RunOut])
 async def list_runs(limit: int = 20):
+    # Liste les derniers runs
     async with SessionLocal() as session:
         res = await session.execute(select(Run).order_by(Run.created_at.desc()).limit(limit))
         items = res.scalars().all()
@@ -191,27 +200,28 @@ async def ingest(provider: str,
                  request: Request,
                  x_signature: str = Header(alias="X-Signature"),
                  x_timestamp: str = Header(alias="X-Timestamp")):
-    # 1) anti-replay temporel
+    # Vérifie timestamp du webhook
     now = int(time.time())
     try:
         ts = int(x_timestamp)
     except Exception:
         raise HTTPException(400, "bad timestamp")
-    if abs(now - ts) > 300:
+    if abs(now - ts) > 300:  # tolérance de 5 min
         raise HTTPException(400, "stale timestamp")
 
-    # 2) signature HMAC
+    # Vérifie signature HMAC
     body = await request.body()
     if not verify_hmac(WEBHOOK_SECRET, body, x_timestamp, x_signature):
         raise HTTPException(401, "bad signature")
 
+    # Parse payload JSON
     data = await request.json()
     event_id = data.get("id")
     if not event_id:
         raise HTTPException(400, "missing event id")
 
+    # Sauvegarde événement et crée un run lié
     async with SessionLocal() as session:
-        # 3) idempotence via contrainte UNIQUE
         evt = WebhookEvent(event_id=event_id, provider=provider, payload=data)
         session.add(evt)
         try:
@@ -220,7 +230,7 @@ async def ingest(provider: str,
             await session.rollback()
             return {"ok": True, "duplicate": True}
 
-        # 4) enregistrer un run simulé
+        # Associe éventuellement un workflow
         workflow_uuid: Optional[uuid.UUID] = None
         wf_id = data.get("workflow_id")
         if isinstance(wf_id, str):
