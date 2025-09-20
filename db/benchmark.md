@@ -1,17 +1,17 @@
-# Benchmark Base de données : PostgreSQL vs MongoDB vs MariaDB
+# Database Benchmark: PostgreSQL vs MongoDB vs MariaDB
 
-## Tableau comparatif
+## Comparison Table
 
-| Critère                     | PostgreSQL                                     | MongoDB                                       | MariaDB                                       |
-| --------------------------- | ---------------------------------------------- | --------------------------------------------- | --------------------------------------------- |
-| **Type**                    | Relationnelle (SQL)                            | NoSQL (document-oriented)                     | Relationnelle (SQL, fork de MySQL)            |
-| **Performance brute**       | Très bonne, surtout pour requêtes complexes    | Excellente pour lecture/écriture massives     | Bonne, optimisée pour requêtes simples        |
-| **Scalabilité**             | Verticale et horizontale (avec extensions)     | Excellente (sharding, réplication native)     | Bonne mais moins avancée que MongoDB          |
-| **Flexibilité des données** | Schéma strict, mais support JSON/JSONB         | Très flexible (documents sans schéma)         | Schéma SQL classique, peu de flexibilité      |
-| **Transactions**            | ACID complet                                   | Transactions multi-documents limitées         | ACID complet                                  |
-| **Écosystème**              | Riche (PostGIS, TimescaleDB, extensions)       | Large (outils big data, BI, intégrations)     | Large (compatibilité MySQL, nombreux outils)  |
-| **Courbe d’apprentissage**  | Moyenne (SQL avancé, nombreuses fonctions)     | Moyenne (paradigme document différent du SQL) | Faible si déjà familier avec MySQL            |
-| **Cas d’usage typique**     | Applications critiques, analyses complexes, BI | Big Data, IoT, logs, applications flexibles   | Applications web classiques, remplaçant MySQL |
+| Criteria             | PostgreSQL                                     | MongoDB                                     | MariaDB                                 |
+| -------------------- | ---------------------------------------------- | ------------------------------------------- | --------------------------------------- |
+| **Type**             | Relational (SQL)                               | NoSQL (document-oriented)                   | Relational (SQL, MySQL fork)            |
+| **Raw Performance**  | Very good, especially for complex queries      | Excellent for massive read/write operations | Good, optimized for simple queries      |
+| **Scalability**      | Vertical and horizontal (extensions available) | Excellent (sharding, native replication)    | Good but less advanced than MongoDB     |
+| **Data Flexibility** | Strict schema, but supports JSON/JSONB         | Very flexible (schema-less documents)       | SQL schema, low flexibility             |
+| **Transactions**     | Full ACID                                      | Limited multi-document transactions         | Full ACID                               |
+| **Ecosystem**        | Rich (PostGIS, TimescaleDB, many extensions)   | Large (big data tools, BI, integrations)    | Large (MySQL compatibility, many tools) |
+| **Learning Curve**   | Medium (advanced SQL features)                 | Medium (document paradigm differs from SQL) | Low if familiar with MySQL              |
+| **Typical Use Case** | Critical apps, complex analytics, BI           | Big Data, IoT, logs, flexible apps          | Classic web apps, MySQL replacement     |
 
 ---
 
@@ -19,14 +19,14 @@
 
 - **PostgreSQL**
 
-  - Point fort : très robuste, riche en fonctionnalités (ACID, extensions comme PostGIS), idéal pour applications critiques et analyses avancées.
-  - Point faible : plus complexe à administrer et optimiser que MariaDB.
+  - Strength: very robust, feature-rich (ACID, extensions like PostGIS), ideal for mission-critical and analytics-heavy apps.
+  - Weakness: more complex to administer and optimize than MariaDB.
 
 - **MongoDB**
 
-  - Point fort : flexibilité et scalabilité excellentes, parfaitement adapté aux environnements Big Data et données non structurées.
-  - Point faible : gestion des transactions moins robuste que les bases SQL traditionnelles.
+  - Strength: excellent flexibility and scalability, perfect for Big Data and unstructured data.
+  - Weakness: transaction handling less robust than SQL databases.
 
 - **MariaDB**
-  - Point fort : simplicité, compatibilité avec MySQL, bonne performance pour les applications web standards.
-  - Point faible : moins riche en fonctionnalités avancées et moins adapté aux gros volumes de données non structurées.
+  - Strength: simplicity, MySQL compatibility, solid performance for standard web apps.
+  - Weakness: lacks advanced features, not suited for large unstructured datasets.
