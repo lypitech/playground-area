@@ -1,0 +1,4 @@
+/* home.css */
+.hero { text-align: center; padding: 3rem; background: #3b82f6; color: white; }
+button { padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; }
+.card { background: #f3f4f6; margin: 1rem; padding: 1rem; border-radius: 8px; cursor: pointer; }
