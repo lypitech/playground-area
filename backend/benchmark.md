@@ -1,18 +1,18 @@
-# Benchmark Backend : FastAPI vs NestJS vs Go
+# Backend Benchmark: FastAPI vs NestJS vs Go
 
-## Tableau comparatif
+## Comparison Table
 
-| Critère                    | FastAPI (Python)                                 | NestJS (Node.js/TS)                               | Go (Golang)                                     |
-| -------------------------- | ------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------- |
-| **Langage**                | Python                                           | TypeScript / JavaScript                           | Go                                              |
-| **Performance brute**      | Moyenne (interpréteur Python, dépend de uvicorn) | Bonne (Node.js + TypeScript, scalable)            | Excellente (compilé, proche du C en perf)       |
-| **Facilité de dev**        | Très élevée (syntaxe claire, peu de code)        | Moyenne à élevée (structure MVC, décorateurs)     | Moyenne (syntaxe simple mais plus bas niveau)   |
-| **Écosystème**             | Riche (IA, data science, web, ORM SQLAlchemy)    | Large (npm, front/back, libs modernes)            | Correct (standard lib solide, mais plus limité) |
-| **Courbe d’apprentissage** | Faible pour Pythonistes                          | Moyenne (TypeScript + concepts Nest)              | Moyenne (simplicité, mais paradigme différent)  |
-| **Scalabilité**            | Limité par Python GIL, mais bon pour API I/O     | Bonne (orienté microservices, support websockets) | Très bonne (conçu pour la concurrence native)   |
-| **Communauté**             | Grande (surtout orientée data/IA)                | Grande (adossée à l’écosystème JS)                | Grande et très active (surtout DevOps/backend)  |
-| **ORM / DB intégration**   | SQLAlchemy, Tortoise, Prisma (moins mature)      | TypeORM, Prisma, Mongoose (très mature)           | GORM, sqlx (bons mais plus bas niveau)          |
-| **Cas d’usage typique**    | APIs rapides à prototyper, intégration ML/IA     | Applications web complètes, microservices Node    | Services haute perf, systèmes distribués        |
+| Criteria                 | FastAPI (Python)                                 | NestJS (Node.js/TS)                        | Go (Golang)                                    |
+| ------------------------ | ------------------------------------------------ | ------------------------------------------ | ---------------------------------------------- |
+| **Language**             | Python                                           | TypeScript / JavaScript                    | Go                                             |
+| **Raw Performance**      | Average (Python interpreter, depends on uvicorn) | Good (Node.js + TypeScript, scalable)      | Excellent (compiled, close to C performance)   |
+| **Ease of Development**  | Very high (clear syntax, little boilerplate)     | Medium to high (MVC structure, decorators) | Medium (simple syntax but lower level)         |
+| **Ecosystem**            | Rich (AI, data science, web, SQLAlchemy ORM)     | Large (npm, frontend/backend, modern libs) | Decent (solid stdlib, but smaller ecosystem)   |
+| **Learning Curve**       | Low for Python developers                        | Medium (TypeScript + Nest concepts)        | Medium (simple syntax but different paradigm)  |
+| **Scalability**          | Limited by Python GIL, good for I/O APIs         | Good (microservices-oriented, websockets)  | Very good (native concurrency support)         |
+| **Community**            | Large (especially data/AI oriented)              | Large (backed by the JS ecosystem)         | Large and active (DevOps/backend focus)        |
+| **ORM / DB Integration** | SQLAlchemy, Tortoise, Prisma (less mature)       | TypeORM, Prisma, Mongoose (very mature)    | GORM, sqlx (good but lower level)              |
+| **Typical Use Case**     | Quick APIs, ML/AI integrations                   | Full web apps, Node-based microservices    | High-performance services, distributed systems |
 
 ---
 
@@ -20,14 +20,14 @@
 
 - **FastAPI**
 
-  - **Point fort** : rapidité de développement, simplicité, parfait pour exposer des APIs (surtout dans un contexte **IA/data science**).
-  - **Point faible** : performances et scalabilité limitées par Python (GIL).
+  - Strength: very fast development, simplicity, great for APIs (especially in **AI/data science**).
+  - Weakness: performance and scalability limited by Python (GIL).
 
 - **NestJS**
 
-  - **Point fort** : structure claire, écosystème riche (npm, TypeORM, Prisma), très adapté aux **applications web complètes** et microservices.
-  - **Point faible** : complexité initiale (apprentissage TypeScript + architecture imposée).
+  - Strength: clear structure, rich ecosystem (npm, TypeORM, Prisma), well-suited for **web apps** and microservices.
+  - Weakness: steeper initial learning curve (TypeScript + architecture).
 
 - **Go**
-  - **Point fort** : **performances excellentes** et gestion native de la concurrence, idéal pour systèmes distribués et **backend haute charge**.
-  - **Point faible** : écosystème moins fourni pour le web, plus de code à écrire qu’avec FastAPI ou NestJS.
+  - Strength: **excellent performance** and native concurrency, ideal for distributed systems and **high-load backends**.
+  - Weakness: smaller “out-of-the-box” ecosystem, more code compared to FastAPI or NestJS.
