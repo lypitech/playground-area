@@ -1,7 +1,5 @@
 # Vite - React Typescript
 
-![image.png](Review%20tests%20frontend%202706aa3f04c68074b9c7e25a561d949a/image%202.png)
-
 ## Pros
 
 - Flexibilité et écosystème riche de React
