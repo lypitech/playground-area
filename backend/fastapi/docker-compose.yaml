@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  api:
+    image: python:3.11-slim
+    working_dir: /app
+    command: >
+      sh -c "pip install fastapi uvicorn[standard] python-dotenv sqlalchemy[asyncio] asyncpg &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - ./:/app
+    environment:
+      POSTGRES_URI: postgresql+asyncpg://app:app@postgres:5432/zapier_poc
+      WEBHOOK_SECRET: supersecret123
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: zapier_poc
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d zapier_poc"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
